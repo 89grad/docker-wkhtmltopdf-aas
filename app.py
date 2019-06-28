@@ -21,8 +21,13 @@ def application(request):
     request data, with keys 'base64_html' and 'options'.
     The application will return a response with the PDF file.
     """
+
+    # Basic health endpoint for use with load balancers
+    if request.path == '/status':
+        return Response('ok', status=200)
+
     if request.method != 'POST':
-        return
+        return Response('Request must be POST', status=405)
 
     request_is_json = request.content_type.endswith('json')
 
