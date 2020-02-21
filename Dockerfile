@@ -18,7 +18,7 @@ RUN cd /tmp && \
 ADD app.py /app.py
 EXPOSE 80
 
-ENTRYPOINT ["usr/local/bin/gunicorn"]
-
-# Show the extended help
-CMD ["-b", "0.0.0.0:80", "--log-file", "-", "app:application"]
+# Cannot use exec form (array of parameters) as those don't support
+# interpolating environment variables.
+# Meanwhile we must use `$PORT` to work on Heroku.
+CMD /usr/local/bin/gunicorn -b 0.0.0.0:$PORT --log-file - app:application
